@@ -10,6 +10,7 @@ def compute_pipeline_metrics(df, columns):
     if not amount_col or amount_col not in df.columns:
         return {"error": "Deal amount column not detected in Deals board."}
 
+    # Clean numeric values
     df[amount_col] = (
         df[amount_col]
         .astype(str)

@@ -11,7 +11,7 @@ from llm import generate_summary
 load_dotenv()
 
 st.set_page_config(layout="wide")
-st.title("Elite Monday BI Agent")
+st.title("🚀 Elite Monday BI Agent")
 
 DEALS_ID = os.getenv("DEALS_BOARD_ID")
 WORK_ID = os.getenv("WORK_ORDERS_BOARD_ID")
@@ -56,7 +56,7 @@ if submit and query:
 
         summary = generate_summary(query, metrics, caveat)
 
-    st.markdown("## Executive Insight")
+    st.markdown("## 📊 Executive Insight")
     st.write(summary)
 
     with st.expander("🔎 Transparency"):

@@ -22,6 +22,7 @@ Founder-Level Output
 
 Features
 ✅ Monday.com Integration
+
 GraphQL API
 Read-only
 Dynamic data retrieval
