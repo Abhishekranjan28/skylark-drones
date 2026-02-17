@@ -1,0 +1,116 @@
+                                        Decision Log
+1. Key Assumptions
+
+The Deals board contains deal value, stage, sector, probability, and close date fields.
+The Work Orders board tracks project execution and may optionally be linked to Deals via a Connect Boards column.
+Founder-level questions are high-level and may not reference specific field names.
+Data may be incomplete, inconsistent, or messy.
+
+2. Architecture Overview
+
+The system follows a layered architecture:
+
+Monday API Layer – Fetches live board data dynamically via GraphQL (read-only).
+Data Cleaning Layer – Normalizes text, dates, currency, and handles missing values.
+LLM Query Planner (Gemini) – Converts natural language questions into structured JSON analysis plans.
+Deterministic Execution Engine – Executes analysis plan safely in Python.
+Data Quality Layer – Computes missing values, invalid rows, and forecast confidence.
+LLM Insight Layer – Generates executive-level narrative insights.
+Transparency Layer – Displays generated plan and computed metrics.
+This separation ensures numeric accuracy while leveraging LLM reasoning.
+
+3. Why Deterministic Computation Instead of Full LLM Computation?
+
+Although LLMs can perform arithmetic, deterministic Python execution was used to:
+Prevent hallucinated numbers
+Ensure financial correctness
+Improve reproducibility
+Maintain scalability
+Allow auditability of results
+
+The LLM is used for:
+Query planning
+Strategic explanation
+All numeric computation is handled by Python.
+
+4. Data Resilience Strategy
+
+To handle messy real-world data:
+
+Null normalization ("", null, None)
+Text standardization (lowercasing, trimming)
+Stage normalization (won/lost mapping)
+Currency cleaning (removing symbols, coercing to numeric)
+Date parsing with invalid date detection
+Missing value percentage reporting
+Forecast confidence scoring
+Automatic caveat injection into executive summary
+
+The agent communicates:
+Missing deal values
+Missing close dates
+Invalid numeric entries
+Forecast reliability score
+
+5. Query Understanding Approach
+
+Instead of rule-based intent mapping, Gemini generates a structured analysis plan:
+
+{
+  "board": "deals",
+  "analysis": "pipeline",
+  "filters": {
+    "sector": "energy",
+    "time_period": "current_quarter"
+  }
+}
+
+
+This allows:
+Flexible interpretation
+Support for new metrics
+Reduced hardcoding
+More production-aligned architecture
+
+6. Business Intelligence Capabilities
+
+The agent can answer:
+Revenue queries
+Pipeline health
+Sector performance
+Time-based analysis
+Execution metrics
+Cross-board comparisons
+Data reliability analysis
+
+7. Interpretation of “Leadership Updates”
+
+I interpreted leadership updates as:
+A structured executive briefing including:
+Revenue performance
+Pipeline summary
+Win rate
+Execution volume
+Risk signals
+Data quality caveats
+Strategic recommendations
+The output is formatted for board-level review.
+
+8. Trade-offs
+
+Decision	Reason
+Streamlit	Rapid deployment
+Gemini API	Strong reasoning + cost-effective
+In-memory processing	Simpler infra within
+Deterministic engine	Financial accuracy
+
+
+9. What I Would Improve With More Time
+
+Async caching layer
+Automated QoQ trend analysis
+Anomaly detection
+Capacity vs pipeline risk scoring
+Slide-ready PDF export
+Multi-board schema auto-detection
+Persistent conversation memory
