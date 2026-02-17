@@ -75,4 +75,4 @@ How is our pipeline looking this quarter?
 Show revenue for energy sector.
 Are we missing critical deal data?
 Prepare a leadership update.
-What are our biggest risks?# skylark-drones
+What are our biggest risks?
